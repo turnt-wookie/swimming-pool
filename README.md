@@ -31,6 +31,55 @@ Lorem ipsum
 * Attributes: <!-- Enumerarlas y adicionar el nombre, tipo, visibilidad, valor por omisión y descripción. -->
 * Functions: <!-- Enumerarlas y adicionar el nombre, listado de argumentos con su tipo, valor de retorno, visibilidad, si es función pública mencionar el servicio que esta implementando (componente e interface de salida) y descripción. -->
 
+### DBConnection
+
+* Description:
+* Dependencies:
+* Attributes:
+* Functions:
+
+### DatabaseConnection
+
+* Description:
+* Dependencies:
+* Attributes:
+* Functions:
+
+### DatabaseConnectionsPool
+
+* Description:
+* Dependencies:
+* Attributes:
+* Functions:
+
+### DatabaseInitialize
+
+* Description:
+* Dependencies:
+* Attributes:
+* Functions:
+
+### FileChangeListener
+
+* Description:
+* Dependencies:
+* Attributes:
+* Functions:
+
+## Config
+
+* Description:
+* Dependencies:
+* Attributes:
+* Functions:
+
+## JSONFileReader
+
+* Description:
+* Dependencies:
+* Attributes:
+* Functions:
+
 ### Class Diagram
 
 ![Diagram](http://3.bp.blogspot.com/-AT2_LdK0jYY/Th2tAZ31VpI/AAAAAAAAQwA/WZi8JieYlCU/s1600/component+diagram.gif) 
