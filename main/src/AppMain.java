@@ -12,7 +12,6 @@ public class AppMain {
             DatabaseConnectionsPool pool = new DatabaseConnectionsPool(configurationFilePath);
             DatabaseConnection connection = pool.acquireConnection();
 
-            connection.getConnection().query("CREATE database IF NOT EXISTS `ugly-duck`;");
             ResultSet rs = connection.getConnection().query("SELECT 1+1 as Suma FROM DUAL;");
             ResultSetMetaData rsmd = rs.getMetaData();
             int columnsNumber = rsmd.getColumnCount();
