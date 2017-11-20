@@ -1,5 +1,3 @@
-package com.potato.pool;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -8,9 +6,12 @@ import java.io.IOException;
 public class FileChangeListener extends Thread{
     private DatabaseInitialize DB;
 
-    public FileChangeListener(DatabaseInitialize db) {
-        this.DB = db;
+    private String filePath;
+
+    public FileChangeListener(String filePath) {
+        this.filePath = filePath;
     }
+
 
     @Override
     public void run() {
@@ -31,8 +32,7 @@ public class FileChangeListener extends Thread{
     private String getFileContent() {
         char [] buffer = new char[200];
         try {
-            String filePath = new File("").getAbsolutePath();
-            File file = new File(filePath + "\\config\\database_config.json");
+            File file = new File(filePath);
             FileReader reader = new FileReader(file);
 
             reader.read(buffer);
@@ -45,5 +45,9 @@ public class FileChangeListener extends Thread{
         }
         String contain = new String(buffer);
         return contain;
+    }
+
+    public void startWatching(DatabaseInitialize db) {
+        this.DB = db;
     }
 }

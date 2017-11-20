@@ -1,6 +1,4 @@
-package com.potato.pool;
-
-import com.potato.pool.exceptions.DBQueryException;
+import exceptions.DBQueryException;
 
 import java.sql.ResultSet;
 
