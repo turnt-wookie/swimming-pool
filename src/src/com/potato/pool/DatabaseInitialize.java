@@ -47,7 +47,11 @@ public class DatabaseInitialize {
         changeListener = new FileChangeListener(this);
         changeListener.start();
 
-        this.Connector = com.mysql.jdbc.Connection;
+        try {
+            this.Connector = Class.forName("com.mysql.jdbc.Connection");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -92,6 +96,7 @@ public class DatabaseInitialize {
     }
 
     private void readConfigFile() throws DBFileException {
+
 
         JSONParser parser = new JSONParser(null, null, null);
         String filePath = new File("").getAbsolutePath();
