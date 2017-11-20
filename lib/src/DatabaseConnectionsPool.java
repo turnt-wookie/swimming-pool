@@ -10,27 +10,20 @@ import java.io.IOException;
 public class DatabaseConnectionsPool {
 
     private DatabaseInitialize databaseInitialize;
-
     private int blockSize;
-
     private int maxPoolSize;
-
     private int amountBlocks;
-
     private int amountAcquiredConnections;
-
     private DatabaseConnection[] pool;
-
     private Config config;
-
+    private FileChangeListener listener;
 
     public DatabaseConnectionsPool(String configFile) throws PoolBadConfigurationException, PoolBadConnectionException, ConfigKeyNotFoundException {
 
         try {
 
             this.config = new Config(configFile);
-            FileChangeListener listener = new FileChangeListener(configFile);
-
+            listener = new FileChangeListener(configFile);
 
             this.databaseInitialize = new DatabaseInitialize( this, config );
 

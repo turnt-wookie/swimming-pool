@@ -9,7 +9,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
-
 public class DatabaseInitialize {
 
     private String DB_CONNECTION;
@@ -19,7 +18,7 @@ public class DatabaseInitialize {
     private String DB_USERNAME;
     private String DB_PASSWORD;
 
-    FileChangeListener listener;
+    private FileChangeListener listener;
 
     private final DatabaseConnectionsPool connectionPool;
 
@@ -46,14 +45,16 @@ public class DatabaseInitialize {
 
         try {
 
-            String link = "jdbc:mysql://"
-                + DB_HOST
-                + ":" + DB_PORT + "/" + DB_DATABASE;
+            String link = "jdbc:mysql://" + DB_HOST + ":" + DB_PORT + "/" + DB_DATABASE;
+
+
 
             connection = DriverManager.getConnection(link, connectionProps);
 
 
         } catch (SQLException ex) {
+
+            ex.printStackTrace();
 
             throw new DBQueryException(ex);
 

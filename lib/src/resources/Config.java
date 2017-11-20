@@ -4,7 +4,6 @@ import exceptions.ConfigKeyNotFoundException;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class Config {

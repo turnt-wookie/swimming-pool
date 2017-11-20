@@ -1,8 +1,6 @@
-import exceptions.ConfigKeyNotFoundException;
-import resources.Config;
-
 import java.io.File;
-import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 
 public class AppMain {
 
@@ -11,15 +9,26 @@ public class AppMain {
         String configurationFilePath = filePath + "/main/src/config.json";
 
         try {
-            Config config = new Config(configurationFilePath);
+            DatabaseConnectionsPool pool = new DatabaseConnectionsPool(configurationFilePath);
+            DatabaseConnection connection = pool.acquireConnection();
 
-            System.out.println(config.getDatabaseHost());
+            ResultSet rs = connection.getConnection().query("SELECT 1+1 as Suma FROM DUAL;");
+            ResultSetMetaData rsmd = rs.getMetaData();
+            int columnsNumber = rsmd.getColumnCount();
+            System.out.println( "Column|Value");
 
-        } catch (org.json.simple.parser.ParseException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ConfigKeyNotFoundException e) {
+
+            while (rs.next()) {
+                for (int i = 1; i <= columnsNumber; i++) {
+                    if (i > 1) System.out.print(",  ");
+                    String columnValue = rs.getString(i);
+                    System.out.print( rsmd.getColumnName(i) + "|" + columnValue);
+                }
+                System.out.println("");
+            }
+
+            pool.releaseConnection(connection);
+        } catch (Throwable e) {
             e.printStackTrace();
         }
 
