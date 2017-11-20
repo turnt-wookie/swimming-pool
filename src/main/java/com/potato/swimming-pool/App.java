@@ -1,4 +1,4 @@
-package com.potato.swimming-pool;
+package com.potato.swimmingpool;
 
 /**
  * Hello world!
