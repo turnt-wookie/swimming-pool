@@ -10,9 +10,7 @@ To use the Java Database Conection Pool you need to do a couple of things:
 3. Now you can get a `DatabaseConnection` from the pool and use it's methods to make queries and manage the database.
 *You may have to import modules from `java.sql` like `ResultSet` to manage the data.
 
-Para utilizar el pool de conexiones es necesario instanciarlo una única vez. Es necesario que se cuente con el archivo `config.json`.
-
-Como ejemplo, tenemos el siguiente archivo de configuración, donde se configuran 5 bloques de tamaño 25 para el pool de conexiones:
+In the next example we configure a pool of conections with 5 blocks of 25 connections each:
 ``` json
 {
   "blockSize": 5,
@@ -32,7 +30,7 @@ Example:
 // To use the connection pool first we have to place a config.json
 // with the data described above and reference it like this:
 String filePath = new File("").getAbsolutePath();
-String configurationFilePath = filePath + "/main/src/config.json";
+String configurationFilePath = filePath + "/main/src/config.json"; // Or wherever your config file is.
 
 try {
   // First we instanciate the pool
@@ -70,7 +68,12 @@ try {
 
 ## Features
 
-Lorem ipsum
+1. Provide connections with a Connection Pool.
+2. Increase the pool size.
+3. Decrease the pool size.
+4. Reconnect all the unused connections (Refresh).
+5. Configure pool segments, with number of blocks and size of each block.
+6. The pool is configurable trough a JSON file.
 
 ## Components
 <!--
@@ -81,6 +84,25 @@ Lorem ipsum
 * Output Interfaces:
 * Artifacts: Archivos que deben utilizarse, así como librerías (ejemplo archivo de configuración, librería de MySQL).
 -->
+
+### Pool
+
+* Description: Pool is a storage system for connections that manage that connectios to the database in threads to make them efficient.
+
+* Dependencies:
+  1. PoolConfigurationReader
+  2. DatabaseAccessor
+
+* Input Interfaces:
+  1. ReleaseConnection toma una DatabaseConnection y la establece como libre y si requería actualizarse detona su actualización.
+  2. UpdateConnections inicia el proceso de actualizacion de las conexiones sin propietarios y marca las conexiones con propietarios para ser actualizados al liberarse.
+
+* Output Interfaces:
+  1. AcquireConnection retorna una DatabaseConnection disponible.
+
+* Artifacts:
+  1. JSONFileReader
+
 
 ### Component Diagram
 
