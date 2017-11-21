@@ -4,6 +4,12 @@
 
 ## How to use?
 
+To use the Java Database Conection Pool you need to do a couple of things:
+1. Make a `config.json` file with the configuration for the pool.
+2. Intanciate a `DatabaseConnectionsPool` object.
+3. Now you can get a `DatabaseConnection` from the pool and use it's methods to make queries and manage the database.
+*You may have to import modules from `java.sql` like `ResultSet` to manage the data.
+
 Para utilizar el pool de conexiones es necesario instanciarlo una única vez. Es necesario que se cuente con el archivo `config.json`.
 
 Como ejemplo, tenemos el siguiente archivo de configuración, donde se configuran 5 bloques de tamaño 25 para el pool de conexiones:
@@ -18,22 +24,34 @@ Como ejemplo, tenemos el siguiente archivo de configuración, donde se configura
   "DB_PASSWORD" : ""
 }
 ```
+Once we have the configuration file, we can use the Pool methods to manage the connections.
 
-Una vez que ya tenemos el archivo de configuración, podemos usar el pool de conexiones junto con sus métodos para manejarlas, un ejemplo de uso es el siguiente:
+Example:
 
 ``` java
+// To use the connection pool first we have to place a config.json
+// with the data described above and reference it like this:
 String filePath = new File("").getAbsolutePath();
 String configurationFilePath = filePath + "/main/src/config.json";
 
 try {
+  // First we instanciate the pool
   DatabaseConnectionsPool pool = new DatabaseConnectionsPool(configurationFilePath);
+  // Then we thell the pool to give us one connection
   DatabaseConnection connection = pool.acquireConnection();
 
+  // After that we can make querys to the database like this and place the
+  // results in a ResultSet object (You may have to import ResultSet)
   ResultSet rs = connection.getConnection().query("SELECT 1+1 as Suma FROM DUAL;");
+
+  // This step is not neccesary, but we demonstrate how to get the metadata
+  // of the tables in the database
   ResultSetMetaData rsmd = rs.getMetaData();
   int columnsNumber = rsmd.getColumnCount();
   System.out.println( "Column|Value");
 
+  // With the ResultSet methods we can navigate trough the results
+  // Refer to: https://docs.oracle.com/javase/7/docs/api/java/sql/ResultSet.html
   while (rs.next()) {
     for (int i = 1; i <= columnsNumber; i++) {
       if (i > 1) System.out.print(",  ");
@@ -43,6 +61,7 @@ try {
     System.out.println("");
   }
 
+  // And finally we can release the connection we use from the pool
   pool.releaseConnection(connection);
 } catch (Throwable e) {
   e.printStackTrace();
@@ -65,7 +84,7 @@ Lorem ipsum
 
 ### Component Diagram
 
-![Diagram](http://3.bp.blogspot.com/-AT2_LdK0jYY/Th2tAZ31VpI/AAAAAAAAQwA/WZi8JieYlCU/s1600/component+diagram.gif)
+![component-diagram](http://rejonpardenilla.com/arqui/component_diagram.png)
 
 ## Classes
 <!--
@@ -92,7 +111,8 @@ Lorem ipsum
 
 ### DatabaseConnectionsPool
 
-* Description: Genera conexiones a la base de datos y las almacena en bloques (cuyo tamaño es definido en el archivo de configuración) y las entrega a los que las soliciten por el método `acquireConnection()`. Posee un método `releaseConnection()` que permite la liberación de las conexiones previamente proveidas. Esta clase maneja el tamaño del pool por sí mismo, manteniendo siempre un número de conexiones específico disponible, aumentando cuando se llega al nùmero mínimo y reduciendo cuando el se excede un tamaño de bloque.
+* Description: Generates conections to the database and store it in blocks (the size of the blocks is defined in the config file) and delivers it trough the method `acquireConnection()`. The Pool can realease the connection trough the method `releaseConnection()`.
+This class manage the pool size by itself and allways provides a specific number of avaliable connections, growing and reducing dynamically the size and number of the blocks.
 
 * Dependencies: Config, DatabaseConnection.
 
@@ -172,7 +192,7 @@ requiere de un update al ser liberado.
 
 ### Class Diagram
 
-![Diagram](http://rejonpardenilla.com/arqui/class_diagram.png) 
+![class-diagram](http://rejonpardenilla.com/arqui/class_diagram.png) 
 
 ## Contributing
 
