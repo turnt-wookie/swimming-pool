@@ -82,7 +82,7 @@ Lorem ipsum
 
 ### Class Diagram
 
-![Diagram](http://3.bp.blogspot.com/-AT2_LdK0jYY/Th2tAZ31VpI/AAAAAAAAQwA/WZi8JieYlCU/s1600/component+diagram.gif) 
+![Diagram](http://rejonpardenilla.com/arqui/class_diagram.png) 
 
 ## Contributing
 
