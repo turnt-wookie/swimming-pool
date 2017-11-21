@@ -4,32 +4,77 @@
 
 ## How to use?
 
-Lorem ipsum
+Para utilizar el pool de conexiones es necesario instanciarlo una única vez. Es necesario que se cuente con el archivo `config.json`.
+
+Como ejemplo, tenemos el siguiente archivo de configuración, donde se configuran 5 bloques de tamaño 25 para el pool de conexiones:
+``` json
+{
+  "blockSize": 5,
+  "maxPoolSize": 25,
+  "DB_HOST" : "localhost",
+  "DB_PORT" : 3306,
+  "DB_DATABASE" : "ugly-duck",
+  "DB_USERNAME" : "root",
+  "DB_PASSWORD" : ""
+}
+```
+
+Una vez que ya tenemos el archivo de configuración, podemos usar el pool de conexiones junto con sus métodos para manejarlas, un ejemplo de uso es el siguiente:
+
+``` java
+String filePath = new File("").getAbsolutePath();
+String configurationFilePath = filePath + "/main/src/config.json";
+
+try {
+  DatabaseConnectionsPool pool = new DatabaseConnectionsPool(configurationFilePath);
+  DatabaseConnection connection = pool.acquireConnection();
+
+  ResultSet rs = connection.getConnection().query("SELECT 1+1 as Suma FROM DUAL;");
+  ResultSetMetaData rsmd = rs.getMetaData();
+  int columnsNumber = rsmd.getColumnCount();
+  System.out.println( "Column|Value");
+
+  while (rs.next()) {
+    for (int i = 1; i <= columnsNumber; i++) {
+      if (i > 1) System.out.print(",  ");
+      String columnValue = rs.getString(i);
+      System.out.print( rsmd.getColumnName(i) + "|" + columnValue);
+    }
+    System.out.println("");
+  }
+
+  pool.releaseConnection(connection);
+} catch (Throwable e) {
+  e.printStackTrace();
+}
+```
 
 ## Features
 
 Lorem ipsum
 
 ## Components
-
+<!--
 ### Component 1
 * Description:
 * Dependencies:
 * Input Interfaces:
 * Output Interfaces:
-* Artifacts: <!-- Archivos que deben utilizarse, así como librerías (ejemplo archivo de configuración, librería de MySQL). -->
+* Artifacts: Archivos que deben utilizarse, así como librerías (ejemplo archivo de configuración, librería de MySQL).
+-->
 
 ### Component Diagram
 
 ![Diagram](http://3.bp.blogspot.com/-AT2_LdK0jYY/Th2tAZ31VpI/AAAAAAAAQwA/WZi8JieYlCU/s1600/component+diagram.gif)
 
 ## Classes
-
+<!--
 ### Class 1
 * Description:
-* Dependencies: <!-- Dependencias con otras clases: <<Listar las asociaciones, nombre y descripción -->
-* Attributes: <!-- Enumerarlas y adicionar el nombre, tipo, visibilidad, valor por omisión y descripción. -->
-* Functions: <!-- Enumerarlas y adicionar el nombre, listado de argumentos con su tipo, valor de retorno, visibilidad, si es función pública mencionar el servicio que esta implementando (componente e interface de salida) y descripción. -->
+* Dependencies: Dependencias con otras clases: <<Listar las asociaciones, nombre y descripción
+* Attributes: Enumerarlas y adicionar el nombre, tipo, visibilidad, valor por omisión y descripción.
+* Functions: Enumerarlas y adicionar el nombre, listado de argumentos con su tipo, valor de retorno, visibilidad, si es función pública mencionar el servicio que esta implementando (componente e interface de salida) y descripción.
+-->
 
 ### DBConnection
 
@@ -47,17 +92,54 @@ Lorem ipsum
 
 ### DatabaseConnectionsPool
 
-* Description:
-* Dependencies:
+* Description: Genera conexiones a la base de datos y las almacena en bloques (cuyo tamaño es definido en el archivo de configuración) y las entrega a los que las soliciten por el método `acquireConnection()`. Posee un método `releaseConnection()` que permite la liberación de las conexiones previamente proveidas. Esta clase maneja el tamaño del pool por sí mismo, manteniendo siempre un número de conexiones específico disponible, aumentando cuando se llega al nùmero mínimo y reduciendo cuando el se excede un tamaño de bloque.
+
+* Dependencies: Config, DatabaseConnection.
+
 * Attributes:
-* Functions:
+1. `blockSize`: De tipo entero con alcance privado sin valor por defecto. Almacena un número que representa el tamaño que deben tener los bloques del pool.
+2. `maxPoolSize`: De tipo entero con alcance privado sin valor por defecto. Almacena un número que representa el tamaño máximo que puede tener el pool.
+3. `amountBlocks`: De tipo entero con alcance privado cuyo valor por defecto es cero. Almacena un número que representa la cantidad de bloques con las que cuenta el pool en un momento específico.
+4. `amountAcquiredConnections`: De tipo entero con alcance privado cuyo valor por defecto es cero. Almacena un número que representa la cantidad de conexiones que el pool ha entregado.
+5. `pool`: De tipo DatabaseConnection[] con alcance privado cuyo valor es el array vacío. Almacena las conexiones del pool.
+
+* Functions: 
+1. AcquireConnection: Retorna una DatabaseConnection disponible. Visibilidad pública.
+2. ReleaseConnection: Toma una DatabaseConnection y la libera. No tiene valor de retorno.
+Visibilidad pública.
+3. UpdateConnections: Sin valor de retorno. Visibilidad pública. Actualiza las conexiones no
+utilizada y marca las utilizadas para actualizarse al momento de liberarse.
+4. SearchForNotAcquired: Retorna una DatabaseConnection disponible. Visibilidad privada.
+5. IncreasePoolSize: Sin valor de retorno. Visibilidad privada. Aumenta el tamaño de conexiones
+activas del pool.
+6. DecreasePoolSize: Sin valor de retorno. Visibilidad privada. Reduce el tamaño de conexiones activas del pool.
+7. InitializePool: Sin valor de retorno. Visibilidad privada. Inicializa las primeras conexiones de pool.
 
 ### DatabaseInitialize
 
-* Description:
-* Dependencies:
+* Description: Es una conexion adquirible por el usuario. Contiene elementos de manejo empleados por el DatabaseConnectionsPool y proporciona el método query para ejecución en base de datos.
+
+* Dependencies: DBConnection
+
 * Attributes:
+1. ID: De tipo entero privado sin valor por defecto. Número de identificación de la conexión.
+2. Connection: De tipo DBConnection privado sin valor por defecto. Conexión proporcionada por
+el DatabaseAccessor.
+3. Acquired: De tipo boleano privado cuyo valor por defecto es falso. Define si la conexión cuenta
+con un propietario o no.
+4. NeedsUpdate: De tipo boleano privado cuyo valor por defecto es falso. Define si la conexión
+requiere de un update al ser liberado.
+
 * Functions:
+1. Query: Publica. Toma como argumento un string que representa la query a ser ejecutada y retorna el ResultSet que es resultado de dicha ejecución.
+2. getId: De paquete. Getter del atributo ID.
+3. setId: De paquete. Setter del atributo ID.
+4. getConnection: De paquete. Getter del atributo Connection.
+5. setConnection: De paquete. Setter del atributo Connection.
+6. isAcquired: De paquete. Getter del atributo Acquired.
+7. setAcquired: De paquete. Setter del atributo Acquired.
+8. isNeedsUpdate: De paquete. Getter del atributo NeedsUpdate.
+9. setNeedsUpdate: De paquete. Setter del atributo NeedsUpdate.
 
 ### FileChangeListener
 
@@ -68,10 +150,18 @@ Lorem ipsum
 
 ## Config
 
-* Description:
-* Dependencies:
+* Description: Lee las configuraciones almacenadas en el archivo JSON.
+
+* Dependencies: JSONFileReader.
+
 * Attributes:
+1. ConfigurationFilePath: De tipo string privado sin valor por defecto. Dirección del archivo de configuración a leer.
+2. JSONFileReader: De tipo JSONFileReader privado sin valor por defecto. Lector de archivos JSON.
+3. ConfigurationObject: De tipo JSONObject privado sin valor por defecto. Objeto JAVA-JSON que contiene la configuración.
+ 
 * Functions:
+1. GetPoolSize: Publico. Retorna entero. Obtiene el tamaño de los blocks del pool del objeto de configuración.
+2. GetMaxPoolSize: Publico. Retorna entero. Obtiene el tamaño máximo del pool del objeto de configuración.
 
 ## JSONFileReader
 
