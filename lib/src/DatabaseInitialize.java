@@ -38,7 +38,7 @@ public class DatabaseInitialize {
     public DBConnection getConnection() throws DBQueryException,
             DBInvalidSettingsException, DBFileException {
 
-        Connection connection = null;
+        DBConnection connection = null;
         Properties connectionProps = new Properties();
         connectionProps.put("user", DB_USERNAME);
         connectionProps.put("password", DB_PASSWORD);
@@ -49,7 +49,7 @@ public class DatabaseInitialize {
 
 
 
-            connection = DriverManager.getConnection(link, connectionProps);
+            connection = (DBConnection) DriverManager.getConnection(link, connectionProps);
 
 
         } catch (SQLException ex) {
@@ -60,7 +60,7 @@ public class DatabaseInitialize {
 
         }
 
-        return new DBConnection(connection);
+        return connection;
 
     }
 

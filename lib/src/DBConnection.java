@@ -5,30 +5,17 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class DBConnection{
-
-    private final Connection JDBCConnection;
-
-    public DBConnection(Connection connection) {
-        this.JDBCConnection = connection;
-
-    }
+public abstract class DBConnection implements Connection {
 
     public ResultSet query(String query) throws DBQueryException {
 
         ResultSet result;
 
         try {
-
-            Statement stmt = null;
-            stmt = (Statement) JDBCConnection.createStatement();
+            Statement stmt = this.createStatement();
             result = stmt.executeQuery(query);
-
-
         } catch (SQLException ex) {
-
             throw new DBQueryException(ex);
-
         }
 
         return result;
@@ -37,9 +24,9 @@ public class DBConnection{
     public void disconnect(){
 
         try {
-            JDBCConnection.close();
+            this.close();
         } catch (SQLException ex) {
-
+            ex.printStackTrace();
         }
 
     }
