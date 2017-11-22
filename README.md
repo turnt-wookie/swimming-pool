@@ -158,16 +158,6 @@ try {
 * Functions: Enumerarlas y adicionar el nombre, listado de argumentos con su tipo, valor de retorno, visibilidad, si es función pública mencionar el servicio que esta implementando (componente e interface de salida) y descripción.
 -->
 
-<<<<<<< HEAD
-=======
-### DBConnection
-
-* Description:
-* Dependencies: `Connection`
-* Attributes:
-* Functions:
-
->>>>>>> 753b18a53cfaffd732739778f2639e005c0891d3
 ### DatabaseConnection
 
 * Description:
