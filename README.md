@@ -158,6 +158,16 @@ try {
 * Functions: Enumerarlas y adicionar el nombre, listado de argumentos con su tipo, valor de retorno, visibilidad, si es función pública mencionar el servicio que esta implementando (componente e interface de salida) y descripción.
 -->
 
+<<<<<<< HEAD
+=======
+### DBConnection
+
+* Description:
+* Dependencies: `Connection`
+* Attributes:
+* Functions:
+
+>>>>>>> 753b18a53cfaffd732739778f2639e005c0891d3
 ### DatabaseConnection
 
 * Description:
@@ -173,11 +183,11 @@ This class manage the pool size by itself and allways provides a specific number
 * Dependencies: `Config`, `DatabaseConnection`.
 
 * Attributes:
-1. `blockSize`: De tipo entero con alcance privado sin valor por defecto. Almacena un número que representa el tamaño que deben tener los bloques del pool.
-2. `maxPoolSize`: De tipo entero con alcance privado sin valor por defecto. Almacena un número que representa el tamaño máximo que puede tener el pool.
-3. `amountBlocks`: De tipo entero con alcance privado cuyo valor por defecto es cero. Almacena un número que representa la cantidad de bloques con las que cuenta el pool en un momento específico.
-4. `amountAcquiredConnections`: De tipo entero con alcance privado cuyo valor por defecto es cero. Almacena un número que representa la cantidad de conexiones que el pool ha entregado.
-5. `pool`: De tipo `DatabaseConnection[]` con alcance privado cuyo valor es el array vacío. Almacena las conexiones del pool.
+1. `blockSize`: Integer. Private. Stores a number that represents the size of the pool blocks.
+2. `maxPoolSize`: Integer. Private. Stores a number that represents the maximum of blocks that a pool can have.
+3. `amountBlocks`: Integer. Private. 0 as default. Stores a number that represents the number of blocks that have in that specific moment.
+4. `amountAcquiredConnections`: Integer. Private. 0 as default. Stores a number that represents the amount of connections that the pool has already given.
+5. `pool`: `DatabaseConnection[]`. Private. Stores the connections of the pool.
 
 * Functions: 
 1. `AcquireConnection`: Retorna una DatabaseConnection disponible. Visibilidad pública.
@@ -237,6 +247,7 @@ con un propietario o no.
 * Functions:
 1. `GetPoolSize`: Publico. Retorna entero. Obtiene el tamaño de los blocks del pool del objeto de configuración.
 2. `GetMaxPoolSize`: Publico. Retorna entero. Obtiene el tamaño máximo del pool del objeto de configuración.
+3. `getDatabasePort`:
 
 ## JSONFileReader
 
