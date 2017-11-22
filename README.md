@@ -24,11 +24,10 @@ In the next example we configure a pool of conections with 5 blocks of 25 connec
 ```
 Once we have the configuration file, we can use the Pool methods to manage the connections.
 
-Example:
+Here we have two options, one querying with the Library methods and Interfaces, and other (more flexible) using `java.sql.*` methods and interfaces.
 
-``` java
-// To use the connection pool first we have to place a config.json
-// with the data described above and reference it like this:
+Example 1 (Quick but less flexible):
+```java
 String filePath = new File("").getAbsolutePath();
 String configurationFilePath = filePath + "/main/src/config.json"; // Or wherever your config file is.
 
@@ -36,11 +35,53 @@ try {
   // First we instanciate the pool
   DatabaseConnectionsPool pool = new DatabaseConnectionsPool(configurationFilePath);
   // Then we thell the pool to give us one connection
-  DatabaseConnection connection = pool.acquireConnection();
+  DatabaseConnection dbConnection = pool.acquireConnection();
 
   // After that we can make querys to the database like this and place the
-  // results in a ResultSet object (You may have to import ResultSet)
-  ResultSet rs = connection.getConnection().query("SELECT 1+1 as Suma FROM DUAL;");
+  // results in a ResultSet object (You may have to import java.sql.ResultSet)
+  ResultSet rs = dbConnection.query("SELECT 1+1 as Suma FROM DUAL;");
+
+  pool.releaseConnection(dbConnection);
+
+} catch(Trowable e) {
+  e.printStackTrace();
+}
+```
+
+Example 2 (More steps but super flexible):
+```java
+String filePath = new File("").getAbsolutePath();
+String configurationFilePath = filePath + "/main/src/config.json"; // Or wherever your config file is.
+
+try {
+  // First we instanciate the pool
+  DatabaseConnectionsPool pool = new DatabaseConnectionsPool(configurationFilePath);
+  // Then we thell the pool to give us one connection
+  DatabaseConnection dbConnection = pool.acquireConnection();
+
+  // After that we can make querys to the database like this and place the
+  // results in a ResultSet object (You may have to import java.sql.*)
+  Connection connection = dbConnection.getConnection();
+  Statement statement = connection.createStatement();
+  ResultSet rs = statement.executeQuery("SELECT 1+1 as Suma FROM DUAL;");
+
+  pool.releaseConnection(dbConnection);
+
+} catch(Trowable e) {
+  e.printStackTrace();
+}
+```
+
+Full Example:
+``` java
+String filePath = new File("").getAbsolutePath();
+String configurationFilePath = filePath + "/main/src/config.json";
+
+try {
+  DatabaseConnectionsPool pool = new DatabaseConnectionsPool(configurationFilePath);
+  DatabaseConnection dbConnection = pool.acquireConnection();
+  
+  ResultSet rs = dbConnection.query("SELECT 1+1 as Suma FROM DUAL;");
 
   // This step is not neccesary, but we demonstrate how to get the metadata
   // of the tables in the database
@@ -117,13 +158,6 @@ try {
 * Functions: Enumerarlas y adicionar el nombre, listado de argumentos con su tipo, valor de retorno, visibilidad, si es función pública mencionar el servicio que esta implementando (componente e interface de salida) y descripción.
 -->
 
-### DBConnection
-
-* Description:
-* Dependencies: `Connection`
-* Attributes:
-* Functions:
-
 ### DatabaseConnection
 
 * Description:
@@ -161,11 +195,11 @@ activas del pool.
 
 * Description: Es una conexion adquirible por el usuario. Contiene elementos de manejo empleados por el `DatabaseConnectionsPool` y proporciona el método query para ejecución en base de datos.
 
-* Dependencies: `DBConnection`
+* Dependencies: `Connection`
 
 * Attributes:
 1. `ID`: De tipo entero privado sin valor por defecto. Número de identificación de la conexión.
-2. `Connection`: De tipo `DBConnection` privado sin valor por defecto. Conexión proporcionada por
+2. `Connection`: De tipo `Connection` privado sin valor por defecto. Conexión proporcionada por
 el `DatabaseAccessor`.
 3. `Acquired`: De tipo boleano privado cuyo valor por defecto es falso. Define si la conexión cuenta
 con un propietario o no.
@@ -189,7 +223,7 @@ con un propietario o no.
 * Attributes:
 * Functions:
 
-## Config
+### Config
 
 * Description: Reads the configurations in `config.json`.
 
@@ -205,7 +239,7 @@ con un propietario o no.
 2. `GetMaxPoolSize`: Publico. Retorna entero. Obtiene el tamaño máximo del pool del objeto de configuración.
 3. `getDatabasePort`:
 
-## JSONFileReader
+### JSONFileReader
 
 * Description:
 * Dependencies:

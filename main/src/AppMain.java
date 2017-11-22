@@ -1,6 +1,8 @@
 import java.io.File;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.sql.Statement;
 
 public class AppMain {
 
@@ -10,13 +12,13 @@ public class AppMain {
 
         try {
             DatabaseConnectionsPool pool = new DatabaseConnectionsPool(configurationFilePath);
-            DatabaseConnection connection = pool.acquireConnection();
+            DatabaseConnection dbConnection = pool.acquireConnection();
 
-            ResultSet rs = connection.getConnection().query("SELECT 1+1 as Suma FROM DUAL;");
+            ResultSet rs = dbConnection.query("SELECT 1+1 as Suma FROM DUAL;");
+
             ResultSetMetaData rsmd = rs.getMetaData();
             int columnsNumber = rsmd.getColumnCount();
             System.out.println( "Column|Value");
-
 
             while (rs.next()) {
                 for (int i = 1; i <= columnsNumber; i++) {
@@ -27,7 +29,7 @@ public class AppMain {
                 System.out.println("");
             }
 
-            pool.releaseConnection(connection);
+            pool.releaseConnection(dbConnection);
         } catch (Throwable e) {
             e.printStackTrace();
         }

@@ -1,19 +1,22 @@
 import exceptions.DBQueryException;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class DatabaseConnection {
 
     private int id;
 
-    private DBConnection connection;
+    private Connection connection;
 
     private boolean acquired;
 
     private boolean deprecated;
 
 
-    DatabaseConnection( int id, DBConnection connection ) {
+    DatabaseConnection( int id, Connection connection ) {
         this.id = id;
         this.connection = connection;
     }
@@ -22,11 +25,11 @@ public class DatabaseConnection {
         System.out.println( this.getId() );
     }
 
-    public ResultSet query(String query ) throws DBQueryException {
+    public ResultSet query(String query) throws DBQueryException, SQLException {
 
-        ResultSet resultSet = this.connection.query( query );
+        Statement statement = this.connection.createStatement();
 
-        return resultSet;
+        return statement.executeQuery(query);
     }
 
     int getId() {
@@ -38,11 +41,11 @@ public class DatabaseConnection {
     }
 
 
-    protected DBConnection getConnection() {
+    protected Connection getConnection() {
         return connection;
     }
 
-    void setConnection(DBConnection connection) {
+    void setConnection(Connection connection) {
 
         this.connection = connection;
     }
@@ -64,7 +67,11 @@ public class DatabaseConnection {
     }
 
     void disconnect(){
-        this.connection.disconnect();
+        try {
+            this.connection.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
     }
 }
 

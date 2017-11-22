@@ -35,10 +35,10 @@ public class DatabaseInitialize {
     }
 
 
-    public DBConnection getConnection() throws DBQueryException,
+    public Connection getConnection() throws DBQueryException,
             DBInvalidSettingsException, DBFileException {
 
-        Connection connection = null;
+        Connection connection;
         Properties connectionProps = new Properties();
         connectionProps.put("user", DB_USERNAME);
         connectionProps.put("password", DB_PASSWORD);
@@ -60,7 +60,7 @@ public class DatabaseInitialize {
 
         }
 
-        return new DBConnection(connection);
+        return connection;
 
     }
 
