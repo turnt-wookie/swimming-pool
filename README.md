@@ -160,10 +160,26 @@ try {
 
 ### DatabaseConnection
 
-* Description:
-* Dependencies:
+* Description: Is a connection that accessible for the user. Has elements used by `DatabaseConnectionsPool` and gives the `query()` method to execute database expressions without the need to prepare statements mannually.
+
+* Dependencies: `Connection`
+
 * Attributes:
+1. `Id`: Integer. Private. Number that represents the connection id.
+2. `Connection`: `Connection`. Private. Connection provided by `DatabaseAccessor`.
+3. `Acquired`: Boolean. Private. Default: false. Defines if the connection is adquired or not.
+4. `NeedsUpdate`: Boolean. Private. Default: false. Defines if the connection requires an update at the moment of release.
+
 * Functions:
+1. `query`: Public. Recieves a string that represents the query to be executed and returns the `ResultSet` from that operation.
+2. `getId`: Protected. Getter of the attribute `ID`.
+3. `setId`: Protected. Setter of the attribute `ID`.
+4. `getConnection`: Protected. Getter of the attribute `Connection`.
+5. `setConnection`: Protected. Setter of the attribute `Connection`.
+6. `isAcquired`: Protected. Getter of the attribute `Acquired`.
+7. `setAcquired`: Protected. Setter of the attribute `Acquired`.
+8. `isNeedsUpdate`: Protected. Getter of the attribute `NeedsUpdate`.
+9. `setNeedsUpdate`: Protected. Setter of the attribute `NeedsUpdate`.
 
 ### DatabaseConnectionsPool
 
@@ -180,48 +196,49 @@ This class manage the pool size by itself and allways provides a specific number
 5. `pool`: `DatabaseConnection[]`. Private. Stores the connections of the pool.
 
 * Functions: 
-1. `AcquireConnection`: Retorna una DatabaseConnection disponible. Visibilidad pública.
-2. `ReleaseConnection`: Toma una DatabaseConnection y la libera. No tiene valor de retorno.
-Visibilidad pública.
-3. `UpdateConnections`: Sin valor de retorno. Visibilidad pública. Actualiza las conexiones no
-utilizada y marca las utilizadas para actualizarse al momento de liberarse.
-4. `SearchForNotAcquired`: Retorna una DatabaseConnection disponible. Visibilidad privada.
-5. `IncreasePoolSize`: Sin valor de retorno. Visibilidad privada. Aumenta el tamaño de conexiones
-activas del pool.
-6. `DecreasePoolSize`: Sin valor de retorno. Visibilidad privada. Reduce el tamaño de conexiones activas del pool.
-7. `InitializePool`: Sin valor de retorno. Visibilidad privada. Inicializa las primeras conexiones de pool.
+1. `AcquireConnection`: Public. Returns a `DatabaseConnection` avaliable.
+2. `ReleaseConnection`: Public. Takes a `DatabaseConnection` and frees it.
+3. `UpdateConnections`: Public. Refresh the unused connections.
+4. `SearchForNotAcquired`: Private. Returns a `DatabaseConnection` avaliable.
+5. `IncreasePoolSize`: Private. Increase the size of the connection pool.
+6. `DecreasePoolSize`: Private. Decrease the size of the connection pool.
+7. `InitializePool`: Private. Initialize the first pool connections.
 
 ### DatabaseInitialize
 
-* Description: Es una conexion adquirible por el usuario. Contiene elementos de manejo empleados por el `DatabaseConnectionsPool` y proporciona el método query para ejecución en base de datos.
+* Description: Initialize a database with a MySQL driver, with a host, user and postgresql.
 
-* Dependencies: `Connection`
+* Dependencies: None.
 
 * Attributes:
-1. `ID`: De tipo entero privado sin valor por defecto. Número de identificación de la conexión.
-2. `Connection`: De tipo `Connection` privado sin valor por defecto. Conexión proporcionada por
-el `DatabaseAccessor`.
-3. `Acquired`: De tipo boleano privado cuyo valor por defecto es falso. Define si la conexión cuenta
-con un propietario o no.
-4. `NeedsUpdate`: De tipo boleano privado cuyo valor por defecto es falso. Define si la conexión requiere de un update al ser liberado.
+1. `DB_HOST`: String. Private. Database Host name. 
+2. `DB_PORT`: String. Private. Database Port name.
+3. `DB_DATABASE`: String. Private. Databse name.
+4. `DB_USERNAME`: String. Private. Database username.
+5. `DB_PASSWORD`: String. Private. Database password.
+6. `ConnectionPool`: `DatabaseConnectionsPool`. Private. Final. Reference to a connection pool.
 
 * Functions:
-1. `query`: Publica. Toma como argumento un string que representa la query a ser ejecutada y retorna el ResultSet que es resultado de dicha ejecución.
-2. `getId`: De paquete. Getter del atributo `ID`.
-3. `setId`: De paquete. Setter del atributo `ID`.
-4. `getConnection`: De paquete. Getter del atributo `Connection`.
-5. `setConnection`: De paquete. Setter del atributo `Connection`.
-6. `isAcquired`: De paquete. Getter del atributo `Acquired`.
-7. `setAcquired`: De paquete. Setter del atributo `Acquired`.
-8. `isNeedsUpdate`: De paquete. Getter del atributo `NeedsUpdate`.
-9. `setNeedsUpdate`: De paquete. Setter del atributo `NeedsUpdate`.
+1. `getConnection`: Public. Returns a database connection with the host, user and password set in the configuration file.
+2. `notifyFileChange`: Public. Used to notify changes from the config json file.
+3. `isConnectionWorking`: Private. Returns a boolean that represents if the connection obtained is up and running.
 
 ### FileChangeListener
 
-* Description:
-* Dependencies:
+* Description: Is a watcher for the `config.json` file to detect if the file is modified in execution time.
+
+* Dependencies: `FileReader`, `Thread`
+
 * Attributes:
+1. `DB`: `DatabaseInitialize`. Private. A reference to notify the database initializer that connection host, user or password has changed.
+
+2. `filePath`: String. Private. Represents the path of the `config.json` file.
+
 * Functions:
+1. `getFileContent`: Private. Manage the file buffer and returns the content as a String.
+
+2. `run`: Public. Override from `Thread`, detects if the file has change.
+
 
 ### Config
 
@@ -241,10 +258,14 @@ con un propietario o no.
 
 ### JSONFileReader
 
-* Description:
-* Dependencies:
-* Attributes:
+* Description: Reads the json files and parses it as Objects.
+
+* Dependencies: JSONParser.
+
+* Attributes: None.
+
 * Functions:
+1. `getJSONObject`: Public. Recieves a string of the json url and returns a JSONObject.
 
 ### Class Diagram
 
