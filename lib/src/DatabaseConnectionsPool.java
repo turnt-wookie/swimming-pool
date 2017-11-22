@@ -6,6 +6,7 @@ import resources.Config;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
+import java.sql.Connection;
 
 public class DatabaseConnectionsPool {
 
@@ -101,7 +102,7 @@ public class DatabaseConnectionsPool {
 
                     try {
 
-                        DBConnection connection = this.databaseInitialize.getConnection();
+                        Connection connection = this.databaseInitialize.getConnection();
                         actualIterationConnection.setConnection( connection );
 
                     } catch ( Exception exception ) {
@@ -245,7 +246,7 @@ public class DatabaseConnectionsPool {
 
             try {
 
-                DBConnection connection = this.databaseInitialize.getConnection();
+                Connection connection = this.databaseInitialize.getConnection();
                 this.pool[ i ] = new DatabaseConnection( i, connection );
 
             } catch ( Exception exception ) {
