@@ -223,7 +223,7 @@ con un propietario o no.
 * Attributes:
 * Functions:
 
-## Config
+### Config
 
 * Description: Reads the configurations in `config.json`.
 
@@ -239,7 +239,7 @@ con un propietario o no.
 2. `GetMaxPoolSize`: Publico. Retorna entero. Obtiene el tamaño máximo del pool del objeto de configuración.
 3. `getDatabasePort`:
 
-## JSONFileReader
+### JSONFileReader
 
 * Description:
 * Dependencies:
