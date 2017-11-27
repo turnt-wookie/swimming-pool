@@ -237,7 +237,7 @@ This class manage the pool size by itself and allways provides a specific number
 * Functions:
 1. `getFileContent`: Private. Manage the file buffer and returns the content as a String.
 
-2. `run`: Public. Override from `Thread`, detects if the file has change.
+2. `run`: Public. Override from `Thread`, detects if the file has change.
 
 
 ### Config
