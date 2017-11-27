@@ -247,14 +247,14 @@ This class manage the pool size by itself and allways provides a specific number
 * Dependencies: `JSONFileReader`.
 
 * Attributes:
-1. `ConfigurationFilePath`: De tipo string privado sin valor por defecto. Dirección del archivo de configuración a leer.
-2. `JSONFileReader`: De tipo JSONFileReader privado sin valor por defecto. Lector de archivos JSON.
-3. `ConfigurationObject`: De tipo JSONObject privado sin valor por defecto. Objeto JAVA-JSON que contiene la configuración.
+1. `ConfigurationFilePath`: String. Private. Path of the configuration file.
+2. `JSONFileReader`: `JSONFileReader`. Private. JSON File reader and parser.
+3. `ConfigurationObject`: `JSONObject` Private. JAVA-JSON file parsed that contains the configuration.
  
 * Functions:
-1. `GetPoolSize`: Publico. Retorna entero. Obtiene el tamaño de los blocks del pool del objeto de configuración.
-2. `GetMaxPoolSize`: Publico. Retorna entero. Obtiene el tamaño máximo del pool del objeto de configuración.
-3. `getDatabasePort`:
+1. `GetPoolSize`: Public. Returns Integer. Obtains the size of the pool blocks from the configuration object.
+2. `GetMaxPoolSize`: Public. Returns Integer. Obtains the size of the connection pool from the configuration object.
+3. `getDatabasePort`: Public. Returns Integer. Returns the port number from the configuration object.
 
 ### JSONFileReader
 
